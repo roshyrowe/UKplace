@@ -82,6 +82,24 @@ let rgbaJoin = (a1, a2, rowSize = 1000, cellSize = 4) => {
     return result;
 };
 
+let rgbaJoinVertical = (a1, a2, rowSize = 2000, cellSize = 4) => {
+    let result = new Uint8Array(a1.length + a2.length);
+    const rawRowSize = rowSize * cellSize;
+    const rows1 = a1.length / rawRowSize;
+
+    for (var row = 0; row < rows1; row++) {
+        result.set(a1.slice(rawRowSize * row, rawRowSize * (row+1)), rawRowSize * row);
+    }
+
+    const rows2 = a2.length / rawRowSize;
+
+    for (var row = 0; row < rows2; row++) {
+        result.set(a2.slice(rawRowSize * row, rawRowSize * (row+1)), (rawRowSize * row) + a1.length);
+    }
+
+    return result;
+};
+
 let getRealWork = rgbaOrder => {
     let order = [];
     for (var i = 0; i < 4000000; i++) {
@@ -219,7 +237,7 @@ async function attemptPlace(accessToken) {
     const rgbaOrder = currentOrders.data;
     const topMap = rgbaJoin(map0.data, map1.data);
     const bottomMap = rgbaJoin(map2.data, map3.data);
-    const rgbaCanvas = rgbaJoin(topMap, bottomMap);
+    const rgbaCanvas = rgbaJoinVertical(topMap, bottomMap);
     const work = getPendingWork(currentOrderList, rgbaOrder, rgbaCanvas);
 
     if (work.length === 0) {
