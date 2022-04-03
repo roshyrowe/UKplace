@@ -115,7 +115,7 @@ function connectSocket() {
                     text: `New map loaded (Reason: ${data.reason ? data.reason : 'connected to server'})`,
                     duration: 10000
                 }).showToast();
-                currentOrderCtx = await getCanvasFromUrl(`https://${cnc_url}/maps/${data.data}`, currentOrderCanvas);
+                currentOrderCtx = await getCanvasFromUrl(`https://${cnc_url}/maps/${data.data}`, currentOrderCanvas, 0, 0, true);
                 hasOrders = true;
                 break;
             default:
@@ -141,8 +141,8 @@ async function attemptPlace() {
     }
     var ctx;
     try {
-        ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), currentPlaceCanvas, 0, 0);
-        ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), currentPlaceCanvas, 1000, 0)
+        ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), currentPlaceCanvas, 0, 0, false);
+        ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), currentPlaceCanvas, 1000, 0, false)
     } catch (e) {
         console.warn('Error retrieving Map: ', e);
         Toastify({
@@ -303,12 +303,15 @@ async function getCurrentImageUrl(id = '0') {
     });
 }
 
-function getCanvasFromUrl(url, canvas, x = 0, y = 0) {
+function getCanvasFromUrl(url, canvas, x = 0, y = 0, clearCanvas = false) {
     return new Promise((resolve, reject) => {
         var ctx = canvas.getContext('2d');
         var img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => {
+            if (clearCanvas) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
             ctx.drawImage(img, x, y);
             resolve(ctx);
         };
