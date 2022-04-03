@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Union Flag Bot
-// @namespace    https://github.com/PlaceNL/Bot
+// @namespace    
 // @version      13.0
 // @description  For Britannia!
 // @author       Union Flag Project
