@@ -1,4 +1,4 @@
-## Web bot instructions
+## Browser script instructions
 First, install the [TamperMonkey](https://www.tampermonkey.net/) browser extension:
 - [Chrome Webstore](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
  - [FireFox](https://addons.mozilla.org/en-US/firefox/addon/violentmonkey/) (ViolentMonkey)
@@ -9,11 +9,11 @@ This script will automate your tile placements according to a template, which we
 The code is open source! Inspect it for yourself!
 
 
-## Headless bot instructions (advanced)
+## Headless script instructions (advanced)
 
-If you don't have any technical experience, just use the web bot instead.
+This is intended for cluster users running multiple accounts. If you don't have any technical experience, just use the browser script instead.
 
-### You can get an access token
+### How to get an access token:
 1. Go to [r/place](https://www.reddit.com/r/place/)
 2. Open the browser console (F12 -> Click on console)
 3. paste this code and press enter:
@@ -29,7 +29,7 @@ async function getAccessToken() {
 
 await getAccessToken()
 ```
-4. The text between quotes (`"`) is your access token.
+4. The text between quotes (`"`) is your access token
 
 ### Installation instructions
 
