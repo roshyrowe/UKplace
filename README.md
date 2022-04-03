@@ -47,4 +47,12 @@ await getAccessToken()
 6. Execute the bot `node bot.js ACCESS_TOKEN_HERE`
 7. BONUS: You can repeat these steps for any amount of accounts you want. Keep in mind to use different accounts.
 
+
+### Docker
+
+1. docker built . -t ukplace
+2. docker run --name ukplace_1 -d-e ACCESS_TOKEN=$YOUR_ACCESS_TOKEN ukplace
+3. docker attach ukplace_1
+
+
 Thanks to PlaceNL for the bot we've based this on too!
