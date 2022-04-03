@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Union Flag Bot
-// @namespace
-// @version      12.0
+// @namespace    https://github.com/PlaceNL/Bot
+// @version      13.0
 // @description  For Britannia!
 // @author       Union Flag Project
 // @match        https://www.reddit.com/r/place/*
@@ -21,7 +21,10 @@ var accessToken;
 var currentOrderCanvas = document.createElement('canvas');
 var currentOrderCtx = currentOrderCanvas.getContext('2d');
 var currentPlaceCanvas = document.createElement('canvas');
-var cnc_url = 'flag.gowergeeks.com:1200'
+var cnc_url = "flag.gowergeeks.com:1200"
+
+// Global constants
+const DEFAULT_TOAST_DURATION_MS = 10000;
 
 const COLOR_MAPPINGS = {
     '#6D001A': 0,
@@ -91,12 +94,12 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
 
     Toastify({
         text: 'Getting Access Token...',
-        duration: 10000
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
     accessToken = await getAccessToken();
     Toastify({
-        text: 'Access Token collected!',
-        duration: 10000
+        text: 'Collected!!',
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
 
     connectSocket();
@@ -105,22 +108,26 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
     setInterval(() => {
         if (socket) socket.send(JSON.stringify({ type: 'ping' }));
     }, 5000);
+    setInterval(async () => {
+        accessToken = await getAccessToken();
+    }, 30 * 60 * 1000)
 })();
 
 function connectSocket() {
     Toastify({
         text: 'Connecting to Union Flag server...',
-        duration: 10000
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
 
     socket = new WebSocket(`wss://${cnc_url}/api/ws`);
 
     socket.onopen = function () {
         Toastify({
-            text: 'Connected to Union Flag Server!',
-            duration: 10000
+            text: 'Connected!',
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         socket.send(JSON.stringify({ type: 'getmap' }));
+        socket.send(JSON.stringify({ type: 'brand', brand: 'userscriptV20' }));
     };
 
     socket.onmessage = async function (message) {
@@ -134,14 +141,21 @@ function connectSocket() {
         switch (data.type.toLowerCase()) {
             case 'map':
                 Toastify({
-                    text: `New map loaded (Reason: ${data.reason ? data.reason : 'connected to server'})`,
-                    duration: 10000
+                    text: `New map loaded (Reason: ${data.reason ? data.reason : 'connected to server'})...`,
+                    duration: DEFAULT_TOAST_DURATION_MS
                 }).showToast();
                 currentOrderCtx = await getCanvasFromUrl(`https://${cnc_url}/maps/${data.data}`, currentOrderCanvas, 0, 0, true);
                 order = getRealWork(currentOrderCtx.getImageData(0, 0, 2000, 2000).data);
                 Toastify({
                     text: `New map loaded, ${order.length} pixels in total`,
-                    duration: 10000
+                    duration: DEFAULT_TOAST_DURATION_MS
+                }).showToast();
+                break;
+            case 'toast':
+                Toastify({
+                    text: `Message from server: ${data.message}`,
+                    duration: data.duration || DEFAULT_TOAST_DURATION_MS,
+                    style: data.style || {}
                 }).showToast();
                 break;
             default:
@@ -151,8 +165,8 @@ function connectSocket() {
 
     socket.onclose = function (e) {
         Toastify({
-            text: `Union Flag server has disconnected: ${e.reason}`,
-            duration: 10000
+            text: `Unoin Flag Server Disconnected: ${e.reason}`,
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         console.error('Socket timeout: ', e.reason);
         socket.close();
@@ -172,10 +186,10 @@ async function attemptPlace() {
         ctx = await getCanvasFromUrl(await getCurrentImageUrl('2'), currentPlaceCanvas, 0, 1000, false)
         ctx = await getCanvasFromUrl(await getCurrentImageUrl('3'), currentPlaceCanvas, 1000, 1000, false)
     } catch (e) {
-        console.warn('Error retrieving Map: ', e);
+        console.warn('Error retrieving map: ', e);
         Toastify({
             text: 'Error retrieving map. Try again in 10 sec...',
-            duration: 10000
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         setTimeout(attemptPlace, 10000); // probeer opnieuw in 10sec.
         return;
@@ -195,16 +209,18 @@ async function attemptPlace() {
     }
 
     const percentComplete = 100 - Math.ceil(work.length * 100 / order.length);
+    const workRemaining = work.length;
     const idx = Math.floor(Math.random() * work.length);
     const i = work[idx];
     const x = i % 2000;
     const y = Math.floor(i / 2000);
     const hex = rgbaOrderToHex(i, rgbaOrder);
 
-   Toastify({
-        text: `Trying to place pixel on ${x}, ${y}... (${percentComplete}% complete)`,
-        duration: 10000
+    Toastify({
+        text: `Trying to place pixel ${x}, ${y}... (${percentComplete}% complete, ${workRemaining} left)`,
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
+
     const res = await place(x, y, COLOR_MAPPINGS[hex]);
     const data = await res.json();
     try {
@@ -213,31 +229,31 @@ async function attemptPlace() {
             const nextPixel = error.extensions.nextAvailablePixelTs + 3000;
             const nextPixelDate = new Date(nextPixel);
             const delay = nextPixelDate.getTime() - Date.now();
+            const toast_duration = delay > 0 ? delay : DEFAULT_TOAST_DURATION_MS;
             Toastify({
-                text: `You are on cooldown! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`,
-                duration: delay
+                text: `You are on cooldown! Next pixel at ${nextPixelDate.toLocaleTimeString()}.`,
+                duration: toast_duration
             }).showToast();
-
             setTimeout(attemptPlace, delay);
         } else {
             const nextPixel = data.data.act.data[0].data.nextAvailablePixelTimestamp + 3000;
             const nextPixelDate = new Date(nextPixel);
             const delay = nextPixelDate.getTime() - Date.now();
+            const toast_duration = delay > 0 ? delay : DEFAULT_TOAST_DURATION_MS;
             Toastify({
-                text: `[r/placeuk] Pixel placed on ${x}, ${y}! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`,
-                duration: delay
+                text: `Pixel placed at ${x}, ${y}! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`,
+                duration: toast_duration
             }).showToast();
             setTimeout(attemptPlace, delay);
         }
     } catch (e) {
-        console.warn('Analyze response error', e);
+        console.warn('Response analysis error', e);
         Toastify({
-            text: `Analyze response error: ${e}.`,
-            duration: 10000
+            text: `Response analysis error: ${e}.`,
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         setTimeout(attemptPlace, 10000);
     }
-
 }
 
 function place(x, y, color) {
@@ -252,7 +268,7 @@ function place(x, y, color) {
                     'PixelMessageData': {
                         'coordinate': {
                             'x': x,
-                            'y': y
+                            'y': y,
                         },
                         'colorIndex': color,
                         'canvasIndex': getCanvas(x, y)
@@ -341,6 +357,9 @@ function getCanvasFromUrl(url, canvas, x = 0, y = 0, clearCanvas = false) {
             var img = new Image();
             img.crossOrigin = 'anonymous';
             img.onload = () => {
+                if (clearCanvas) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
                 ctx.drawImage(img, x, y);
                 resolve(ctx);
             };
