@@ -236,7 +236,12 @@ async function attemptPlace(accessToken) {
                 console.log(`Pixel posted too soon! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`)
                 setTimeout(retry, delay);
             } else {
-                console.error(`[!!] CRITICAL ERROR: ${error.message}. Did you copy the 'reddit_session' cookie correctly?`);
+                if (error.message == "Ratelimited") {
+                    console.error("[!!] CRITICAL ERROR: You have been ratelimited, close any tabs on your browser with this account active and/or wait a few minutes before trying to start this script again.");
+                } else {
+                    console.error(`[!!] CRITICAL ERROR: ${error.message}. Did you copy the 'reddit_session' cookie correctly?`);
+                }
+
                 console.error(`[!!] Fix this error, then restart the script to continue...`);
             }
         } else {
