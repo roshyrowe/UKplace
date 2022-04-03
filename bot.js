@@ -169,7 +169,7 @@ function connectSocket() {
 
         switch (data.type.toLowerCase()) {
             case 'map':
-                console.log(`New map loaded (reden: ${data.reason ? data.reason : 'connected to server'})`)
+                console.log(`New map loaded (reason: ${data.reason ? data.reason : 'connected to server'})`)
                 currentOrders = await getMapFromUrl(`https://${cnc_url}/maps/${data.data}`);
                 currentOrderList = getRealWork(currentOrders.data);
                 break;
