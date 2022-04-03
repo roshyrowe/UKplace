@@ -1,4 +1,4 @@
-## Browser script instructions
+## Browser script instructions (easy)
 First, install the [TamperMonkey](https://www.tampermonkey.net/) browser extension:
 - [Chrome Webstore](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
  - [FireFox](https://addons.mozilla.org/en-US/firefox/addon/violentmonkey/) (ViolentMonkey)
