@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Union Flag Bot
 // @namespace    
-// @version      13.0
+// @version      14.0
 // @description  For Britannia!
 // @author       Union Flag Project
 // @match        https://www.reddit.com/r/place/*
