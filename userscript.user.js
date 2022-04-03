@@ -81,7 +81,7 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
   return pendingWork
 }
 
-;(async function () {
+(async function () {
   GM_addStyle(GM_getResourceText('TOASTIFY_CSS'))
   currentOrderCanvas.width = 2000
   currentOrderCanvas.height = 2000
