@@ -236,14 +236,6 @@ async function attemptPlace() {
                     duration: toast_duration
                 }).showToast();
                 setTimeout(attemptPlace, delay);
-                const nextPixelDate = new Date(nextPixel);
-                const delay = nextPixelDate.getTime() - Date.now();
-                const toast_duration = delay > 0 ? delay : DEFAULT_TOAST_DURATION_MS;
-                Toastify({
-                    text: `You are on cooldown! Next pixel at ${nextPixelDate.toLocaleTimeString()}.`,
-                    duration: toast_duration
-                }).showToast();
-                setTimeout(attemptPlace, delay);
             } catch (e) {
                console.log("If you ignore it it doesn't exist." + e)
                Toastify({
