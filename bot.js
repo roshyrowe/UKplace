@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import getPixels from "get-pixels";
 import WebSocket from 'ws';
 
-const HEADLESS_VERSION = 2;
+const HEADLESS_VERSION = 3;
 
 const args = process.argv.slice(2);
 
@@ -30,35 +30,66 @@ var currentOrders;
 var currentOrderList;
 
 var order = [];
-for (var i = 0; i < 2000000; i++) {
+for (var i = 0; i < 4000000; i++) {
     order.push(i);
 }
 order.sort(() => Math.random() - 0.5);
 
 
 const COLOR_MAPPINGS = {
-	'#BE0039': 1,
+    '#6D001A': 0,
+    '#BE0039': 1,
+    '#BE0039': 1,
+    '#FF4500': 2,
     '#FF4500': 2,
     '#FFA800': 3,
+    '#FFA800': 3,
     '#FFD635': 4,
+    '#FFD635': 4,
+    '#FFF8B8': 5,
+    '#00A368': 6,
     '#00A368': 6,
     '#00CC78': 7,
+    '#00CC78': 7,
+    '#7EED56': 8,
     '#7EED56': 8,
     '#00756F': 9,
+    '#00756F': 9,
     '#009EAA': 10,
+    '#009EAA': 10,
+    '#00CCC0': 11,
+    '#2450A4': 12,
     '#2450A4': 12,
     '#3690EA': 13,
+    '#3690EA': 13,
+    '#51E9F4': 14,
     '#51E9F4': 14,
     '#493AC1': 15,
+    '#493AC1': 15,
     '#6A5CFF': 16,
+    '#6A5CFF': 16,
+    '#94B3FF': 17,
+    '#811E9F': 18,
     '#811E9F': 18,
     '#B44AC0': 19,
+    '#B44AC0': 19,
+    '#E4ABFF': 20,
+    '#DE107F': 21,
+    '#FF3881': 22,
     '#FF3881': 22,
     '#FF99AA': 23,
+    '#FF99AA': 23,
+    '#6D482F': 24,
     '#6D482F': 24,
     '#9C6926': 25,
+    '#9C6926': 25,
+    '#FFB470': 26,
     '#000000': 27,
+    '#000000': 27,
+    '#515252': 28,
     '#898D90': 29,
+    '#898D90': 29,
+    '#D4D7D9': 30,
     '#D4D7D9': 30,
     '#FFFFFF': 31
 };
@@ -76,7 +107,7 @@ let rgbaJoin = (a1, a2, rowSize = 1000, cellSize = 4) => {
 
 let getRealWork = rgbaOrder => {
     let order = [];
-    for (var i = 0; i < 2000000; i++) {
+    for (var i = 0; i < 4000000; i++) {
         if (rgbaOrder[(i * 4) + 3] !== 0) {
             order.push(i);
         }
@@ -195,9 +226,13 @@ async function attemptPlace(accessToken) {
     
     var map0;
     var map1;
+    var map2;
+    var map3;
     try {
-        map0 = await getMapFromUrl(await getCurrentImageUrl('0'))
+        map0 = await getMapFromUrl(await getCurrentImageUrl('0'));
         map1 = await getMapFromUrl(await getCurrentImageUrl('1'));
+        map2 = await getMapFromUrl(await getCurrentImageUrl('2'));
+        map3 = await getMapFromUrl(await getCurrentImageUrl('3'));
     } catch (e) {
         console.warn('Error retrieving folder: ', e);
         setTimeout(retry, 15000); // probeer opnieuw in 15sec.
@@ -205,7 +240,9 @@ async function attemptPlace(accessToken) {
     }
 
     const rgbaOrder = currentOrders.data;
-    const rgbaCanvas = rgbaJoin(map0.data, map1.data);
+    const topMap = rgbaJoin(map0.data, map1.data);
+    const bottomMap = rgbaJoin(map2.data, map3.data);
+    const rgbaCanvas = rgbaJoin(topMap, bottomMap);
     const work = getPendingWork(currentOrderList, rgbaOrder, rgbaCanvas);
 
     if (work.length === 0) {
@@ -257,8 +294,17 @@ async function attemptPlace(accessToken) {
     }
 }
 
+function getCanvas(x, y) {
+    if (x <= 999) {
+        return y <= 999 ? 0 : 2;
+    } else {
+        return y <= 999 ? 1 : 3;
+    }
+}
+
 function place(x, y, color, accessToken = defaultAccessToken) {
     socket.send(JSON.stringify({ type: 'placepixel', x, y, color }));
+
 	return fetch('https://gql-realtime-2.reddit.com/query', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -272,7 +318,7 @@ function place(x, y, color, accessToken = defaultAccessToken) {
 							'y': y % 1000
 						},
 						'colorIndex': color,
-						'canvasIndex': (x > 999 ? 1 : 0)
+						'canvasIndex': getCanvas(x, y)
 					}
 				}
 			},
