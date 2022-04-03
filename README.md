@@ -6,10 +6,16 @@ First, install the [TamperMonkey](https://www.tampermonkey.net/) browser extensi
 Then just click **[here](https://raw.githubusercontent.com/roshyrowe/UKplace/main/userscript.user.js)**, click "Install", refresh the page and you're good to go!
 
 This script will automate your tile placements according to a template, which we can edit remotely to rapidly push changes.
+
 The code is open source! Inspect it for yourself!
 
 
-## Headless script instructions (advanced)
+
+
+
+
+
+## ALTERNATIVE: Headless script instructions (advanced)
 
 This is intended for cluster users running multiple accounts. If you don't have any technical experience, just use the browser script instead.
 
