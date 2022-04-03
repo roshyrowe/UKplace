@@ -22,7 +22,7 @@ This is intended for cluster users running multiple accounts. If you don't have 
 ### How to get an access token:
 1. Go to [r/place](https://www.reddit.com/r/place/)
 2. Open the browser console (F12 -> Click on console)
-3. paste this code and press enter:
+3. Paste this code and press enter:
 ```
 async function getAccessToken() {
     const usingOldReddit = window.location.href.includes('new.reddit.com');
@@ -42,10 +42,9 @@ await getAccessToken()
 1. Install [NodeJS](https://nodejs.org/).
 2. Download the bot via [this link](https://github.com/roshyrowe/UKplace/archive/refs/heads/main.zip).
 3. Extract the bot anywhere on your desktop
-4. Open a command prompt/terminal in this folder
-    Windows: Shift+right mousebutton in the folder -> Click on "open Powershell here"
-5. install the dependencies: `npm i`
-6. execute the bot `node bot.js ACCESS_TOKEN_HERE`
-7. BONUS: You can repeat these steps for any amount of accounts you'd want. Keep in mind to use different accounts.
+4. Open a command prompt/terminal in this folder — Windows: Shift+right mousebutton in the folder -> Click on "open Powershell here"
+5. Install the dependencies: `npm i`
+6. Execute the bot `node bot.js ACCESS_TOKEN_HERE`
+7. BONUS: You can repeat these steps for any amount of accounts you want. Keep in mind to use different accounts.
 
 Thanks to PlaceNL for the bot we've based this on too!
