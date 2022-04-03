@@ -120,7 +120,9 @@ async function attemptPlace() {
     }
 
     const rgbaOrder = currentOrders.data;
-    const rgbaCanvas = [].concat(map0.data, map1.data);
+    const rgbaCanvas = new Uint8Array(map0.data.length + map1.data.length);
+    rgbaCanvas.set(map0.data);
+    rgbaCanvas.set(map1.data, map0.data.length);
 
     for (const i of order) {
         // negeer lege order pixels.
