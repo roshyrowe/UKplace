@@ -52,7 +52,7 @@ await getAccessToken()
 
 1. docker built . -t ukplace
 2. docker run --name ukplace_1 -d-e ACCESS_TOKEN=$YOUR_ACCESS_TOKEN ukplace
-3. docker attach ukplace_1
+3. docker logs ukplace_1 -f 
 
 
 Thanks to PlaceNL for the bot we've based this on too!
