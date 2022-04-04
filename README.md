@@ -40,4 +40,12 @@ This is intended for cluster users running multiple accounts. If you don't have 
 6. Execute the bot `node bot.js SESSION_COOKIE_HERE`
 7. BONUS: You can repeat these steps for any amount of accounts you'd want. Keep in mind to use different accounts.
 
+
+### Docker
+
+1. docker built . -t ukplace
+2. docker run --name ukplace_1 -d-e ACCESS_TOKEN=$YOUR_ACCESS_TOKEN ukplace
+3. docker logs ukplace_1 -f 
+
+
 Thanks to PlaceNL for the bot we've based this on too!
