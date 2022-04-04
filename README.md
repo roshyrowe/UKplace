@@ -5,6 +5,8 @@ First, install the [TamperMonkey](https://www.tampermonkey.net/) browser extensi
 
 Then just click **[here](https://raw.githubusercontent.com/roshyrowe/UKplace/main/userscript.user.js)**, click "Install", refresh r/place and you're good to go!
 
+**The script will allow for CORS access press 'Allow all' when it pops up!!**
+
 This script will automate your tile placements according to a template, which we can edit remotely to rapidly push changes.
 
 The code is open source! Inspect it for yourself!

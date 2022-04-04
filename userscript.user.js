@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Union Flag Bot
 // @namespace
-// @version      15.0
+// @version      16.0
 // @description  For Britannia!
 // @author       Union Flag Project
 // @match        https://www.reddit.com/r/place/*
@@ -13,6 +13,7 @@
 // @downloadURL  https://raw.githubusercontent.com/roshyrowe/UKplace/main/userscript.user.js
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
+// @grant        GM.xmlHttpRequest
 // ==/UserScript==
 
 var socket
@@ -430,24 +431,32 @@ async function getCurrentImageUrl(id = '0') {
 function getCanvasFromUrl(url, canvas, x = 0, y = 0, clearCanvas = false) {
   return new Promise((resolve, reject) => {
     let loadImage = (ctx) => {
-      var img = new Image()
-      img.crossOrigin = 'anonymous'
-      img.onload = () => {
-        if (clearCanvas) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height)
+      GM.xmlHttpRequest({
+        method: "GET",
+        url: url,
+        responseType: 'blob',
+        onload: function(response) {
+        var urlCreator = window.URL || window.webkitURL;
+        var imageUrl = urlCreator.createObjectURL(this.response);
+        var img = new Image()
+        img.onload = () => {
+          if (clearCanvas) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+          }
+          ctx.drawImage(img, x, y)
+          resolve(ctx)
         }
-        ctx.drawImage(img, x, y)
-        resolve(ctx)
-      }
-      img.onerror = () => {
-        Toastify({
-          text: 'Error retrieving folder. Try again in 3 sec...',
-          duration: 3000,
-        }).showToast()
-        setTimeout(() => loadImage(ctx), 3000)
-      }
-      img.src = url
+        img.onerror = () => {
+          Toastify({
+            text: 'Error retrieving folder. Try again in 3 sec...',
+            duration: 3000,
+          }).showToast()
+          setTimeout(() => loadImage(ctx), 3000)
+        }
+        img.src = imageUrl;
     }
+  })
+  }
     loadImage(canvas.getContext('2d'))
   })
 }
