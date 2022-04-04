@@ -135,8 +135,8 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
 
 function startPlacement() {
     if (!hasTokens) {
-        // 1 sec wait
-        setTimeout(startPlacement, 1000);
+        // 6 sec wait
+        setTimeout(startPlacement, 6000);
         return
     }
 
@@ -225,7 +225,7 @@ function connectSocket() {
 async function attemptPlace(accessToken) {
     let retry = () => attemptPlace(accessToken);
     if (currentOrderList === undefined) {
-        setTimeout(retry, 2000); // 2sec wait
+        setTimeout(retry, 10000); // 10sec wait
         return;
     }
     
