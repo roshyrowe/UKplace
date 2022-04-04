@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import getPixels from "get-pixels";
 import WebSocket from 'ws';
 
-const HEADLESS_VERSION = 4;
+const HEADLESS_VERSION = 4.1;
 
 const args = process.argv.slice(2);
 
