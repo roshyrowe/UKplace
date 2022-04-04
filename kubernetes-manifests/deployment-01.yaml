@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ukplace-deployment-01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ukplace
+  template:
+    metadata:
+      labels:
+        app: ukplace
+    spec:
+      containers:
+      - name: ukplace
+        image: ukplace
+        env:
+          - name: ACCESS_TOKEN
+            value: $YOUR_ACCESS_TOKEN

@@ -13,7 +13,7 @@ if (args.length != 1 && !process.env.ACCESS_TOKEN) {
 
 console.log(`Headless client version: ${HEADLESS_VERSION}`);
 
-let redditSessionCookies = (process.env.REDDIT_SESSION || args[0]).split(';');
+let redditSessionCookies = (process.env.ACCESS_TOKEN || args[0]).split(';');
 
 if (redditSessionCookies.length >= 4) {
     console.log("Warning: Using more than 4 accounts per IP is not recommended.")

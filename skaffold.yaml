@@ -1,0 +1,21 @@
+# -------------------------------------------
+# use to deploy code on a kubernetes cluster 
+# -------------------------------------------
+# run: skaffold dev
+# add more manifests for each account
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: ukplace
+build:
+  artifacts:
+  - image: ukplace
+    context: .
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    flags:
+      apply: []
+    manifests:
+    - kubernetes-manifests/deployment-01.yaml
