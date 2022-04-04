@@ -172,7 +172,7 @@ async function refreshTokens() {
     console.log("Refreshed tokens: ", tokens)
 
     tokens.forEach((token, idx) => {
-        accessTokens[idx].token = token;
+        accessTokens[idx] = token;
     });
 
     accessTokens = tokens;
