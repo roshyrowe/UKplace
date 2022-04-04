@@ -276,7 +276,13 @@ async function attemptPlace(accessToken) {
                 const nextPixelDate = new Date(nextPixel);
                 const delay = nextPixelDate.getTime() - Date.now();
                 console.log(`Pixel posted too soon! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`)
-                setTimeout(retry, delay);
+
+                if (delay > 99999999999) {
+                    console.warn("You have been softbanned by Reddit from placing pixels. You'll need to use another account :(")
+                    setTimeout(retry, 10000);   
+                } else {
+                    setTimeout(retry, delay);
+                }
             } else {
                 if (error.message == "Ratelimited") {
                     console.error("[!!] CRITICAL ERROR: You have been ratelimited, close any tabs on your browser with this account active and/or wait a few minutes before trying to start this script again.");
