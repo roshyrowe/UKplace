@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import getPixels from "get-pixels";
 import WebSocket from 'ws';
 
-const HEADLESS_VERSION = 4;
+const HEADLESS_VERSION = 5;
 
 const args = process.argv.slice(2);
 
@@ -70,6 +70,24 @@ const COLOR_MAPPINGS = {
     '#D4D7D9': 30,
     '#FFFFFF': 31
 };
+
+let USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36 Edg/100.0.1185.29",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.3 Safari/605.1.15",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 12.3; rv:98.0) Gecko/20100101 Firefox/98.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_3_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.3 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0",
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.141 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_3_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36 Edg/99.0.1150.36"
+];
+
+let CHOSEN_AGENT = USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
 
 let rgbaJoin = (a1, a2, rowSize = 1000, cellSize = 4) => {
     const rawRowSize = rowSize * cellSize;
@@ -172,8 +190,9 @@ async function refreshTokens() {
     console.log("Refreshed tokens: ", tokens)
 
     tokens.forEach((token, idx) => {
-        accessTokens[idx].token = token;
+        accessTokens[idx] = token;
     });
+
 
     accessTokens = tokens;
     defaultAccessToken = tokens[0];
@@ -340,7 +359,8 @@ function place(x, y, color, accessToken = defaultAccessToken) {
 			'referer': 'https://hot-potato.reddit.com/',
 			'apollographql-client-name': 'mona-lisa',
 			'Authorization': `Bearer ${accessToken}`,
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+            'User-Agent': CHOSEN_AGENT
 		}
 	});
 }
