@@ -4,7 +4,8 @@
 // @version      8b4556eefb6e4afa33c3ce01564fe3b9dce31f72
 // @description  The easiest way to run our automated placer, right from your browser
 // @author       PlaceUK
-// @match        https://*.reddit.com/r/place/*
+// @match        https://www.reddit.com/r/place/*
+// @match        https://new.reddit.com/r/place/*
 // @connect      reddit.com
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // ==/UserScript==
