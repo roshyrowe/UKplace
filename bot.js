@@ -24,7 +24,7 @@ var hasTokens = false;
 let accessTokens = [];
 let defaultAccessToken;
 
-var cnc_url = 'flag.gowergeeks.com:1200'
+var cnc_url = 'placeuk.g3v.co.uk'
 var socket;
 var currentOrders;
 var currentOrderList;
@@ -203,7 +203,7 @@ function connectSocket() {
     console.log(`C==============\r\n    |\\ || \/|\r\n    |\\\\||\/\/|\r\n    |_\\||\/_|\r\n    |__  __|\r\n    | \/||\\ |\r\n    |\/\/||\\\\|\r\n    |\/_||_\\|  https://discord.gg/pkcmBnjJNV\n\n`)
     console.log('Connecting to Union Flag server...')
 
-    socket = new WebSocket(`wss://${cnc_url}/api/ws`);
+    socket = new WebSocket(`wss://${cnc_url}/ws`);
 
     socket.onerror = function(e) {
         console.error("Socket error: " + e.message)
